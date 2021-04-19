@@ -1,19 +1,36 @@
 const http = require("http");
 const fs = require("fs");
+const path = require("path");
 
 const fetch = require("node-fetch");
-const server = http.createServer(function (req, res) {
-  res.writeHead(200);
-  res.end("Hello world");
-});
-server.listen(8000, () => {
-  console.log("server is runing");
-});
+
+// if (!fs.existsSync("result")) {
+//   fs.mkdir("result", (err) => {
+//     if (err) return err;
+
+//     fs.writeFile("./result/posts.json", newData, (err) => {
+//       if (err) return err;
+//       console.log("directory created");
+//     });
+//   });
+// }
+
 fetch("http://jsonplaceholder.typicode.com/posts")
   .then((res) => res.json())
   .then((data) => {
-      const newData = JSON.stringify(data)
-    fs.writeFile("posts.json", newData, () => {
-      console.log("Successful");
-    });
+    const newData = JSON.stringify(data);
+    
+
+    if (!fs.existsSync("result")) {
+      fs.mkdir("result", (err) => {
+        if (err) return err;
+
+        fs.writeFile("./result/posts.json", newData, (err) => {
+          if (err) return err;
+          console.log("directory created");
+        });
+      });
+    } else {
+      console.log("error! directory exists");
+    }
   });
